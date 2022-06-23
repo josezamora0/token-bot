@@ -48,9 +48,9 @@ async def maintread():
     @telesender.on(events.NewMessage(pattern='/start'))
     async def startMessage(event):
         user=await event.get_sender()
-        group=await telesender.get_entity(1315170897)#'Venta de Combos tu envío 2.0🤐'
-        print(group)
-        ausers=await telesender.get_participants(entity=group)
+        print(maingroup)
+        print(user)
+        ausers=await telesender.get_participants(entity=1315170897)
         usersid=[i.id for i in ausers]
         print(user)
         if user.id==5461780118 or user.id==848517956:
@@ -243,6 +243,7 @@ async def maintread():
         
         
     await telesender.start(bot_token=bot_key)
+    maingroup=await telesender.get_entity(1315170897)#'Venta de Combos tu envío 2.0🤐'
     await telesender.run_until_disconnected()
 
 
