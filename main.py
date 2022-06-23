@@ -53,7 +53,7 @@ async def maintread():
         #'Venta de Combos tu envío 2.0🤐'
         print(maingroup)
         print(user)
-        ausers=await telesender.get_participants(entity=1315170897)
+        ausers=await telesender.get_participants(entity=maingroup)
         usersid=[i.id for i in ausers]
         print(user)
         if user.id==5461780118 or user.id==848517956:
