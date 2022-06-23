@@ -53,8 +53,8 @@ async def maintread():
         #'Venta de Combos tu envío 2.0🤐'
         print(maingroup)
         print(user)
-        ausers=await telesender.get_participants(entity=maingroup)
-        usersid=[i.id for i in ausers]
+        userslist=await telesender.get_participants(maingroup)
+        usersid=[i.id for i in userslist]
         print(user)
         if user.id==5461780118 or user.id==848517956:
             await telesender.send_message(user,'Comandos:\n /plist  |Muestra la lista de provincias. \n /limit #p #l |Selecciona un limite para una provincia especifica. Sin argumentos muestra los limites. \n /active #p | Activa una provincia especifica. \n /deactive #p | Desactiva una provincia especifica. \n /token #p | Genera el comando para agregar los tokens para una provincia especifica.')
@@ -63,7 +63,7 @@ async def maintread():
         if user.id in usersid:
             print(event.message.text)
             await telesender.send_message(user,'Este es el bot que recibirá los tokens. Estos deben ser enviados cuando se diga en el canal y no deben tener mas de 45 minutos de creados o serán rechazados.')
-        print()
+        
     @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/plist'))
     async def plistMessage(event):
         user=await event.get_sender()
@@ -148,7 +148,8 @@ async def maintread():
     async def startMessage(event):
         maingroup= await telesender.get_entity(PeerChannel(1315170897))
         user=await event.get_sender()
-        usersid=[i.id for i in maingroup]
+        userslist=await telesender.get_participants(maingroup)
+        usersid=[i.id for i in userslist]
         print(usersid)
         if user.id in usersid:
             print(event.message.text)
