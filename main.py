@@ -5,7 +5,7 @@ import asyncio
 import jwt
 import requests
 from telethon import TelegramClient,events
-from telethon.tl.types import PeerUser
+from telethon.tl.types import PeerChannel
 tokens={}
 nosleep=True
 usersprov={}
@@ -49,7 +49,7 @@ async def maintread():
     @telesender.on(events.NewMessage(pattern='/start'))
     async def startMessage(event):
         user=await event.get_sender()
-        maingroup= await telesender.get_entity(PeerChat(1315170897))
+        maingroup= await telesender.get_entity(PeerChannel(1315170897))
         #'Venta de Combos tu envío 2.0🤐'
         print(maingroup)
         print(user)
