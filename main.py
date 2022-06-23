@@ -243,7 +243,7 @@ async def maintread():
         
         
     await telesender.start(bot_token=bot_key)
-    maingroup=await telesender.get_entity(1315170897)#'Venta de Combos tu envío 2.0🤐'
+    maingroup=await telesender.get_input_entity(1315170897)#'Venta de Combos tu envío 2.0🤐'
     await telesender.run_until_disconnected()
 
 
