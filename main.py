@@ -47,8 +47,8 @@ async def maintread():
     telesender=TelegramClient('BotSession', api_id, api_hash,loop=asyncio.get_running_loop())
     @telesender.on(events.NewMessage(pattern='/start'))
     async def startMessage(event):
-        group=await telesender.get_entity('Venta de Combos tu envío 2.0🤐')
-        print(group)
+        #group=await telesender.get_entity('Venta de Combos tu envío 2.0🤐')
+        #print(group)
         ausers=await telesender.get_participants(entity=1315170897)
         user=await event.get_sender()
         usersid=[i.id for i in ausers]
