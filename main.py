@@ -146,9 +146,9 @@ async def maintread():
         
     @telesender.on(events.NewMessage(pattern='{"province"'))        
     async def startMessage(event):
-        ausers=await telesender.get_participants(entity='Venta de Combos tu envío 2.0🤐')
+        maingroup= await telesender.get_entity(PeerChannel(1315170897))
         user=await event.get_sender()
-        usersid=[i.id for i in ausers]
+        usersid=[i.id for i in maingroup]
         print(usersid)
         if user.id in usersid:
             print(event.message.text)
