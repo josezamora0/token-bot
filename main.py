@@ -5,7 +5,7 @@ import asyncio
 import jwt
 import requests
 from telethon import TelegramClient,events
-from telethon.tl.types import PeerChannel
+from telethon.tl.types import PeerChannel,PeerUser
 tokens={}
 nosleep=True
 usersprov={}
@@ -48,16 +48,24 @@ async def maintread():
     telesender=TelegramClient('BotSession', api_id, api_hash,loop=asyncio.get_running_loop())
     @telesender.on(events.NewMessage(pattern='/start'))
     async def startMessage(event):
-        user=await event.get_sender()
         maingroup= await telesender.get_entity(PeerChannel(1315170897))
-        #'Venta de Combos tu envío 2.0🤐'
+        user=await event.get_sender()
         print(maingroup)
-        print(user)
         userslist=await telesender.get_participants(maingroup)
         usersid=[i.id for i in userslist]
         print(user)
         if user.id==5461780118 or user.id==848517956:
-            await telesender.send_message(user,'Comandos:\n /plist  |Muestra la lista de provincias. \n /limit #p #l |Selecciona un limite para una provincia especifica. Sin argumentos muestra los limites. \n /active #p | Activa una provincia especifica. \n /deactive #p | Desactiva una provincia especifica. \n /token #p | Genera el comando para agregar los tokens para una provincia especifica.')
+            await telesender.send_message(user,'Comandos:\n\
+                                          /start  |  Muestra este mensaje.\n\
+                                          /plist  |  Muestra la lista de provincias. \n\
+                                          /limit #p #l |  Selecciona un limite para una provincia especifica. Sin argumentos muestra los limites. \n\
+                                          /active #p |  Activa una provincia especifica. Sin argumentos muestra provincias activas.\n\
+                                          /deactive #p | Desactiva una provincia especifica.\n\
+                                          /token #p | Genera el comando para agregar los tokens para una provincia especifica.\n\
+                                          /check {userlist} |  Muestra los usuarios a los q pertenece cada cuenta.\n\
+                                          /gettoken #tokenid  |  Envia la lista de tokens al programa.\n\
+                                          /count #p  |  Cuenta los tokens de una provincia.'
+                                          )
             return
         
         if user.id in usersid:
@@ -108,8 +116,14 @@ async def maintread():
     @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/active'))
     async def active(event):
         user=await event.get_sender()
+        acttext=event.text.replace('/active','').strip()
+        if acttext=='':
+            actname=[]
+            for i in active_province:
+                actname.append(str(list(provinces.keys())[list(provinces.values()).index(i)]))
+            await telesender.send_message(user,f'Provincias activas: {actname}')
         try:
-            pselect=int(event.text.replace('/active','').strip())
+            pselect=int(acttext)
         except:
             await telesender.send_message(user,'Error en el codigo de provincia')  
             return         
@@ -120,7 +134,10 @@ async def maintread():
             print(pname,':',provinceid)
             active_province.add(provinceid)
             await telesender.send_message(user,f'Provincia activa: {pname}, id:{provinceid}')
-            await telesender.send_message(user,f'Provincias activas:{list(active_province)}')
+            actname=[]
+            for i in active_province:
+                actname.append(str(list(provinces.keys())[list(provinces.values()).index(i)]))
+            await telesender.send_message(user,f'Provincias activas:{actname}')
         else:
             await telesender.send_message(user,f'Fuera del rango de provincias')
         
@@ -145,12 +162,13 @@ async def maintread():
             await telesender.send_message(user,f'Fuera del rango de provincias')
         
     @telesender.on(events.NewMessage(pattern='{"province"'))        
-    async def startMessage(event):
+    async def provMessage(event):
         maingroup= await telesender.get_entity(PeerChannel(1315170897))
         user=await event.get_sender()
+        print(maingroup)
         userslist=await telesender.get_participants(maingroup)
         usersid=[i.id for i in userslist]
-        print(usersid)
+        print(user)        
         if user.id in usersid:
             print(event.message.text)
             try:
@@ -178,6 +196,7 @@ async def maintread():
                             tokens[provinceid][user.id].append(datas['token'])
                         else:
                             print("Token ya agregado")
+                            return await telesender.send_message(user,'Este token ya fue agregado')                            
                     else:
                         return await telesender.send_message(user,'Ya envio el límite máximo de token para esta provincia')
                 print('Token agregado correctamente')
@@ -186,7 +205,29 @@ async def maintread():
                 print('provincia inactiva')
                 pname=str(list(provinces.keys())[list(provinces.values()).index(provinceid)])
                 await telesender.send_message(user,f'Provincia {pname} inactiva espere a q se anuncie en el grupo la activación de la provincia') 
+    
+    @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/count'))        
+    async def countTokens(event):
+        user=await event.get_sender()
+        strcount=event.text.replace('/count').strip()
+        if strcount=='':
+            return
+        else:
+            try:
+                strcount=int(strcount)
+                pname=[*provinces][strcount]
+                provinceid=provinces[pname]                
+            except:
+                await telesender.send_message(user,f'Error en el formato del comando. Correcto /count #p')
+                return 
             
+        count=0
+        for userid in tokens[strcount]:
+            for i in userid:
+                count+=1        
+        await telesender.send_message(user,f'{count} tokens almacenados en la provincia {pname}')
+            
+          
     @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/token'))        
     async def generateToken(event):
         user=await event.get_sender()
@@ -221,7 +262,27 @@ async def maintread():
         cont=len(authTokens)
         await telesender.send_message(user,f'{cont} tokens agregados') 
         await telesender.send_message(user,f'/gettoken {id}') 
-    
+    @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/check'))        
+    async def checkUsers(event):
+        user=await event.get_sender()
+        chtext=event.text.replace('/check').strip()
+        if chtext=='':
+            await telesender.send_message(user,'Este comando no puede estar vacio')
+        datas=json.loads(chtext)
+        strcorreos='Usuarios con sus cuentas:'
+        for userid in tokens[datas['province']]:
+            count=0
+            for j in tokens[datas['province']][userid]:
+                userentity=await telesender.get_entity(PeerUser(userid))
+                tokendecoded=jwt.decode(j.replace('JWT ','').strip(),options={'verify_signature':False})
+                email=tokendecoded['email']
+                if email in datas['users']:
+                    if count==0:
+                        strcorreos=strcorreos+f"\n {userentity.username} : {email}"
+                    else:
+                        strcorreos=strcorreos+f", {email}"
+                    count+=1
+            await telesender.send_message(user,strcorreos)
     @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/clean'))        
     async def clean(event):
         global tokens
@@ -246,7 +307,7 @@ async def maintread():
                    
         
         
-    await telesender.start(bot_token=bot_key)    
+    await telesender.start(bot_token=bot_key)
     await telesender.run_until_disconnected()
 
 
