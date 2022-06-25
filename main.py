@@ -15,6 +15,7 @@ bot_key=getenv('BOT_KEY')
 api_id =getenv('API_ID')
 api_hash = getenv('API_HASH')
 province_limits={}
+province_mainlimits={}
 provinces={
     "Artemisa": "UHJvdmluY2U6NjQ=",
     "La Habana": "UHJvdmluY2U6Mzk=",
@@ -37,6 +38,7 @@ for i in provinces.values():
     tokens[i]={}
     usersprov[i]=[]
     province_limits[i]=1
+    province_mainlimits[i]=15
 print(tokens)
 active_province=set([])
 print('Abierto')
@@ -180,6 +182,12 @@ async def maintread():
             print(active_province)
             provinceid=datas['province']
             if provinceid in active_province:
+                provtokenlist=[]
+                for i in tokens[provinceid]:
+                    provtokenlist=provtokenlist+list(i.values())
+                  
+                if len(provtokenlist)>=province_mainlimits[provinceid]:
+                    return await telesender.send_message(user,'La provincia ya esta llena y no acepta mas tokens')
                 print('provincia activa')
                 if tokens[provinceid].get(user.id)==None:
                     try:
@@ -265,9 +273,10 @@ async def maintread():
     @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/check'))        
     async def checkUsers(event):
         user=await event.get_sender()
-        chtext=event.text.replace('/check').strip()
+        chtext=event.text.replace('/check','').strip()
         if chtext=='':
             await telesender.send_message(user,'Este comando no puede estar vacio')
+            return
         datas=json.loads(chtext)
         strcorreos='Usuarios con sus cuentas:'
         for userid in tokens[datas['province']]:
@@ -282,7 +291,7 @@ async def maintread():
                     else:
                         strcorreos=strcorreos+f", {email}"
                     count+=1
-            await telesender.send_message(user,strcorreos)
+        await telesender.send_message(user,strcorreos)
     @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/clean'))        
     async def clean(event):
         global tokens
