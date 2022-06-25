@@ -184,7 +184,7 @@ async def maintread():
             if provinceid in active_province:
                 provtokenlist=[]
                 for i in tokens[provinceid]:
-                    provtokenlist=provtokenlist+list(tokens[provinceid][i].values())
+                    provtokenlist=provtokenlist+tokens[provinceid][i]
                   
                 if len(provtokenlist)>=province_mainlimits[provinceid]:
                     return await telesender.send_message(user,'La provincia ya esta llena y no acepta mas tokens')
