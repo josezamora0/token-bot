@@ -38,7 +38,7 @@ for i in provinces.values():
     tokens[i]={}
     usersprov[i]=[]
     province_limits[i]=1
-    province_mainlimits[i]=15
+    province_mainlimits[i]=5
 print(tokens)
 active_province=set([])
 print('Abierto')
