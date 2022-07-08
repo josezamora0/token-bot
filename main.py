@@ -337,7 +337,7 @@ async def maintread():
         else:
             await telesender.send_message(user,'Usted tiene pagos por confirmar, solicite el código a @reservatoken')
     
-    @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/deactcode'))
+    @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/actcode'))
     async def refreshCodeActivate(event):
         global isactiverefcode
         user=await event.get_sender()
@@ -345,11 +345,11 @@ async def maintread():
         isactiverefcode=True
         await telesender.send_message(user,'Refresh Code esta activado')
     
-    @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/actcode'))
+    @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/deactcode'))
     async def refreshCodeDeactivate(event):
         global isactiverefcode
         user=await event.get_sender()
-        print('Act Code')
+        print('Deact Code')
         isactiverefcode=False
         await telesender.send_message(user,'Refresh Code esta desactivado')
 
