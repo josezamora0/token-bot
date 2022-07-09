@@ -325,10 +325,11 @@ async def maintread():
             return await telesender.send_message(user,'Aún no se puede solicitar el codigo')
         if user.id in user_with_codes:
             return await telesender.send_message(user,'Ya usted solicito el codigo de hoy')
-        response=requests.post(url, json={'id':user.id},headers={'Content-Type':'application/json','Authorization':f'Bearer {AUTH_TOKEN}'})
+        response=requests.post(url, json={'id':str(user.id)},headers={'Content-Type':'application/json','Authorization':f'Bearer {AUTH_TOKEN}'})
+        print(response.json())
         if len(response.json()['products'])==0:
             try:
-                response2=requests.post(url2, json={'id':user.id},headers={'Content-Type':'application/json','Authorization':f'Bearer {AUTH_TOKEN}'})
+                response2=requests.post(url2, json={'id':str(user.id)},headers={'Content-Type':'application/json','Authorization':f'Bearer {AUTH_TOKEN}'})
                 code=response2.json()['code']
                 await telesender.send_message(user,code)
                 user_with_codes.append(user.id)
