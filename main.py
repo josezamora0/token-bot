@@ -318,9 +318,16 @@ async def maintread():
     @telesender.on(events.NewMessage(pattern='/code'))
     async def refreshCode(event):
         print('refreshingCode')
+        maingroup= await telesender.get_entity(PeerChannel(1315170897))
+        
         url='https://todusup1.herokuapp.com/user/products/get'
         url2='https://todusup1.herokuapp.com/user/token'
         user=await event.get_sender()
+        userslist=await telesender.get_participants(maingroup)
+        usersid=[i.id for i in userslist]
+        print(user)        
+        if user.id not in usersid:
+            return
         if isactiverefcode is False:
             return await telesender.send_message(user,'Aún no se puede solicitar el codigo')
         if user.id in user_with_codes:
