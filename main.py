@@ -61,15 +61,16 @@ async def maintread():
         print(user)
         if user.id==5461780118 or user.id==848517956:
             await telesender.send_message(user,'Comandos:\n\
-                                          /start  |  Muestra este mensaje.\n\
-                                          /plist  |  Muestra la lista de provincias. \n\
-                                          /limit #p #l |  Selecciona un limite para una provincia especifica. Sin argumentos muestra los limites. \n\
-                                          /active #p |  Activa una provincia especifica. Sin argumentos muestra provincias activas.\n\
-                                          /deactive #p | Desactiva una provincia especifica.\n\
-                                          /token #p | Genera el comando para agregar los tokens para una provincia especifica.\n\
-                                          /check {userlist} |  Muestra los usuarios a los q pertenece cada cuenta.\n\
+                                          /start |  Muestra este mensaje.\n\
+                                          /plist |  Muestra la lista de provincias. \n\
+                                          /limit #p #l|  Selecciona un limite para una provincia especifica. Sin argumentos muestra los limites. \n\
+                                          /active #p  |  Activa una provincia especifica. Sin argumentos muestra provincias activas.\n\
+                                          /deactive #p| Desactiva una provincia especifica.\n\
+                                          /token #p   | Genera el comando para agregar los tokens para una provincia especifica.\n\
+                                          /check {userlist}   |  Muestra los usuarios a los q pertenece cada cuenta.\n\
                                           /gettoken #tokenid  |  Envia la lista de tokens al programa.\n\
                                           /count #p  |  Cuenta los tokens de una provincia.\n\
+                                          /cleancode |  Limpia la lista de códigos para q puedan ser nuevamente solicitados.\n\
                                           /actcode   |  Activa la solicitud de tokens en la programa.\n\
                                           /deactcode |  Desactiva la solicitud de tokens en la programa.'
                                           )
@@ -345,6 +346,14 @@ async def maintread():
         else:
             await telesender.send_message(user,'Usted tiene pagos por confirmar, solicite el código a @reservatoken')
     
+    @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/cleancode'))
+    async def cleanCodeActivate(event):
+        global user_with_codes
+        user=await event.get_sender()
+        print('Act Code')
+        user_with_codes=[]
+        await telesender.send_message(user,'La lista de códigos fue limpiada con éxito')
+        
     @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/actcode'))
     async def refreshCodeActivate(event):
         global isactiverefcode
