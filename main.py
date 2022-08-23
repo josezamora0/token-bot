@@ -374,11 +374,11 @@ async def maintread():
     async def payMethod(event):
         maingroup= await telesender.get_entity(PeerChannel(1315170897))
         userslist=await telesender.get_participants(maingroup)
-        usersid=[i.id for i in userslist]
-        print(user)        
+        usersid=[i.id for i in userslist]                
         if user.id not in usersid:
             return
-        user=await event.get_sender()        
+        user=await event.get_sender()  
+        print(user)
         return await telesender.send_message(user,'Tarjeta de pago:```9238-1299-7097-7767```\n Número a confirmar:```58849746```')
     
         
