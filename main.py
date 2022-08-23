@@ -379,7 +379,7 @@ async def maintread():
         print(user)
         if user.id not in usersid:
             return        
-        return await telesender.send_message(user,'Tarjeta de pago:```9238-1299-7097-7767```\n Número a confirmar:```58849746```')
+        return await telesender.send_message(user,'Tarjeta de pago: ```9238-1299-7097-7767```\n Número a confirmar: ```58849746```')
     
         
         
