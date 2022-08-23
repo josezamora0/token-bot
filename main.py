@@ -372,6 +372,7 @@ async def maintread():
     
     @telesender.on(events.NewMessage(pattern='/pago'))
     async def payMethod(event):
+        maingroup= await telesender.get_entity(PeerChannel(1315170897))
         userslist=await telesender.get_participants(maingroup)
         usersid=[i.id for i in userslist]
         print(user)        
