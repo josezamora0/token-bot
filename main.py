@@ -78,7 +78,7 @@ async def maintread():
         
         if user.id in usersid:
             print(event.message.text)
-            await telesender.send_message(user,'Este es el bot que recibirá los tokens. Estos deben ser enviados cuando se diga en el canal y no deben tener mas de 45 minutos de creados o serán rechazados.')
+            await telesender.send_message(user,'Bot para solicitar los codigos de la app ComboPick, envie el mensaje /code para solicitar el código')
         
     @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/plist'))
     async def plistMessage(event):
@@ -369,7 +369,19 @@ async def maintread():
         print('Deact Code')
         isactiverefcode=False
         await telesender.send_message(user,'Refresh Code esta desactivado')
-
+    
+    @telesender.on(events.NewMessage(pattern='/pago'))
+    async def payMethod(event):
+        userslist=await telesender.get_participants(maingroup)
+        usersid=[i.id for i in userslist]
+        print(user)        
+        if user.id not in usersid:
+            return
+        user=await event.get_sender()        
+        return await telesender.send_message(user,'Tarjeta de pago:```9238-1299-7097-7767```\n Número a confirmar:```58849746```')
+    
+        
+        
     await telesender.start(bot_token=bot_key)
     await telesender.run_until_disconnected()
 
