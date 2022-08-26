@@ -335,6 +335,10 @@ async def maintread():
             return await telesender.send_message(user,'Ya usted solicito el codigo de hoy')
         response=requests.post(url, json={'id':str(user.id)},headers={'Content-Type':'application/json','Authorization':f'Bearer {AUTH_TOKEN}'})
         print(response.json())
+        try:
+            print(len(response.json()['products'])==0)
+        except:
+            await telesender.send_message(user,'Usted no esta registrado en el servidor, solicite el registro a @reservatoken')
         if len(response.json()['products'])==0:
             try:
                 response2=requests.post(url2, json={'id':str(user.id)},headers={'Content-Type':'application/json','Authorization':f'Bearer {AUTH_TOKEN}'})
