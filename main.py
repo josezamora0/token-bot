@@ -70,9 +70,11 @@ async def maintread():
                                           /check {userlist}   |  Muestra los usuarios a los q pertenece cada cuenta.\n\
                                           /gettoken #tokenid  |  Envia la lista de tokens al programa.\n\
                                           /count #p  |  Cuenta los tokens de una provincia.\n\
+                                          /cleanprov |  Limpia los tokens de una provincia.\n\
                                           /cleancode |  Limpia la lista de códigos para q puedan ser nuevamente solicitados.\n\
                                           /actcode   |  Activa la solicitud de tokens en la programa.\n\
-                                          /deactcode |  Desactiva la solicitud de tokens en la programa.'
+                                          /deactcode |  Desactiva la solicitud de tokens en la programa.\n\
+                                          /cleanchannel  |  Elimina las cuentas del canal q no esten en la base de datos.'
                                           )
             return
         
@@ -297,10 +299,10 @@ async def maintread():
                         strcorreos=strcorreos+f", {email}"
                     count+=1
         await telesender.send_message(user,strcorreos)
-    @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/clean'))
+    @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/cleanprov'))
     async def clean(event):
         user=await event.get_sender()
-        clean=event.text.replace('/clean','').strip()
+        clean=event.text.replace('/cleanprov','').strip()
         if clean=='':
             await telesender.send_message(user,'Limpiando todos los tokens')
             for i in provinces.values():
@@ -385,6 +387,20 @@ async def maintread():
             return        
         return await telesender.send_message(user,'Tarjeta de pago: ```9238-1299-7097-7767```\n Número a confirmar: ```58849746```')
     
+    @telesender.on(events.NewMessage(from_users=[5461780118,848517956],pattern='/cleanchannel'))
+    async def cleanChannel(event):
+        user=await event.get_sender()
+        maingroup= await telesender.get_entity(PeerChannel(1315170897))
+        userslist=await telesender.get_participants(maingroup)
+        usersid=[i.id for i in userslist]
+        url='https://todusup1.herokuapp.com/userid/get'
+        response=requests.post(url,headers={'Content-Type':'application/json','Authorization':f'Bearer {AUTH_TOKEN}'})
+        usersiddb=response.json()['usersidlist']
+        userstodelete=[i for i in usersid if i not in usersiddb]
+        print(userstodelete)
+        return await telesender.send_message(user,f'{userstodelete}')
+        
+        
         
         
     await telesender.start(bot_token=bot_key)
