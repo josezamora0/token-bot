@@ -396,7 +396,7 @@ async def maintread():
         url='https://todusup1.herokuapp.com/userid/get'
         response=requests.post(url,headers={'Content-Type':'application/json','Authorization':f'Bearer {AUTH_TOKEN}'})
         usersiddb=response.json()['usersidlist']
-        userstodelete=[i for i in usersid if i not in usersiddb]
+        userstodelete=[i for i in usersid if str(i) not in usersiddb]
         print(userstodelete)
         await telesender.send_message(user,f'{usersid}')
         await telesender.send_message(user,f'{usersiddb}')
