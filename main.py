@@ -398,10 +398,12 @@ async def maintread():
         usersiddb=response.json()['usersidlist']
         userstodelete=[i for i in usersid if str(i) not in usersiddb]
         print(userstodelete)
-        await telesender.send_message(user,f'{usersid}')
-        await telesender.send_message(user,f'{usersiddb}')
-        
-        return await telesender.send_message(user,f'{userstodelete}')
+        await telesender.send_message(user,f'{userstodelete}')
+        userstodeletedata=[]
+        for i in userstodelete:
+            userdata=await telesender.get_entity(PeerUser(i))
+            userstodeletedata.add((userdata.username,userdata.id))
+        return await telesender.send_message(user,f'{userstodeletedata}')
         
         
         
