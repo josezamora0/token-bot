@@ -398,6 +398,9 @@ async def maintread():
         usersiddb=response.json()['usersidlist']
         userstodelete=[i for i in usersid if i not in usersiddb]
         print(userstodelete)
+        await telesender.send_message(user,f'{usersid}')
+        await telesender.send_message(user,f'{usersiddb}')
+        
         return await telesender.send_message(user,f'{userstodelete}')
         
         
