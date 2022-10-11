@@ -402,7 +402,7 @@ async def maintread():
         userstodeletedata=[]
         for i in userstodelete:
             userdata=await telesender.get_entity(PeerUser(i))
-            userstodeletedata.add((userdata.username,userdata.id))
+            userstodeletedata.append((userdata.username,userdata.id))
         return await telesender.send_message(user,f'{userstodeletedata}')
         
         
